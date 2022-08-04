@@ -50,8 +50,16 @@ app.post('/todos', (req, res) => {
     // method 2: 直接命令mongoose去建立一個新的Todo物件並新增至資料庫
     // return Todo.create({ name:name })
     return Todo.create({ name })
-        .then(() => res.redirect('/'))
+        .then(() => res.redirect('/')) // 重新導回首頁
         .catch(error => console.log(error))
+})
+
+app.get('/todos/:id', (req, res) => {
+    const id = req.params.id
+    Todo.findById(id) // 找特定id
+        .lean()
+        .then(todo => res.render('detail', { todo }))
+        .catch(error => console.error(error))
 })
 
 app.listen(port, () => {
