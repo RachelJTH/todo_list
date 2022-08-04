@@ -78,6 +78,14 @@ app.post('/todos/:id/edit', (req, res) => { // 接住 edit.hbs所輸入的input 
             todo.name = name
             return todo.save()
         })
+        .then(() => res.redirect(`/todos/:${id}`))
+        .catch(error => console.log(error))
+})
+
+app.post('/todos/:id/delete', (req, res) => {
+    const id = req.params.id
+    return Todo.findById(id) // 主要目的是先確保資料庫有這筆資料，才進行刪除
+        .then(todo => todo.remove())
         .then(() => res.redirect('/'))
         .catch(error => console.log(error))
 })
