@@ -58,10 +58,30 @@ app.get('/todos/:id', (req, res) => {
     const id = req.params.id
     Todo.findById(id) // 找特定id
         .lean()
-        .then(todo => res.render('detail', { todo }))
+        .then(todo => res.render('detail', { todo })) // == todo:todo
         .catch(error => console.error(error))
+})
+
+app.get('/todos/:id/edit', (req, res) => {
+    const id = req.params.id
+    Todo.findById(id) // 找特定id
+        .lean()
+        .then(todo => res.render('edit', { todo })) // == todo:todo
+        .catch(error => console.error(error))
+}) 
+
+app.post('/todos/:id/edit', (req, res) => { // 接住 edit.hbs所輸入的input post
+    const id = req.params.id
+    const name = req.body.name // 來源是使用者填寫的表單 "form" 使用的是body
+    Todo.findById(id)
+        .then(todo => {
+            todo.name = name
+            return todo.save()
+        })
+        .then(() => res.redirect('/'))
+        .catch(error => console.log(error))
 })
 
 app.listen(port, () => {
     console.log(`express is listen on localhost:${port}`)
-})
+})  
