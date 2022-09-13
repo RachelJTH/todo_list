@@ -3,6 +3,8 @@
 <ul>
     {{#each todos}}
         <li>
+            {{!-- add checkbox for view (without editing by "disabled") --}}
+            <input type="checkbox" name="isDone" {{#if this.isDone}} checked {{/if}} disabled> 
            {{this.name}}
         </li>
         <a href="/todos/{{ this._id }}">detail</a>

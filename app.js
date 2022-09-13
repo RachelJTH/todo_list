@@ -67,15 +67,19 @@ app.get('/todos/:id/edit', (req, res) => {
     Todo.findById(id) // 找特定id
         .lean()
         .then(todo => res.render('edit', { todo })) // == todo:todo
-        .catch(error => console.error(error))
+        .catch(error => console.log(error))
 }) 
+
 
 app.post('/todos/:id/edit', (req, res) => { // 接住 edit.hbs所輸入的input post
     const id = req.params.id
-    const name = req.body.name // 來源是使用者填寫的表單 "form" 使用的是body
+    const { name, isDone } = req.body // 採用解構賦值方式
     Todo.findById(id)
         .then(todo => {
             todo.name = name
+            todo.isDone = isDone === 'on' 
+            // isDone尤前端回傳(post) checkbox 狀態值是"on" 或是"off"; 所以todo.isDone這個值被賦予True/False的值
+
             return todo.save()
         })
         .then(() => res.redirect(`/todos/:${id}`))
