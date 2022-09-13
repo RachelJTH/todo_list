@@ -11,7 +11,7 @@
         <a href="/todos/{{ this._id }}/edit">edit</a>
         {{!-- 這邊使用form: 教案裡面是解釋因為是需要使用到POST; 另外指定style是因為form本身default設定會換行，使用display:inline
         會與前面tag <a> 為一排 --}}
-        <form action="/todos/{{ this._id }}/delete" method="post" style="display: inline;">
+        <form action="/todos/{{ this._id }}?_method=DELETE" method="post" style="display: inline;">
             <button type="submit">delete</button>
         </form> 
 

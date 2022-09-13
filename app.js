@@ -3,6 +3,7 @@ const mongoose = require('mongoose') //import mongoose
 const exphbs = require('express-handlebars')
 const Todo = require('./models/todo') // import todo model
 const bodyParser = require('body-parser')
+const methodOverride = require('method-override')
 const app = express()
 const port = 3000
 
@@ -26,10 +27,13 @@ app.set('view engine', 'hbs') // 啟用樣版引擎:向express指定要進行的
 // 用 app.use 規定每一筆請求都需要透過 body-parser 進行前置處理
 app.use(bodyParser.urlencoded({ extended:true }))
 
+app.use(methodOverride('_method'))
+
 app.get('/', (req, res) => {
     // Controller
     Todo.find() // 未有參數，表示不另行篩選
         .lean() // 清理傳入內容
+        // .sort(name: 'asc') //asc: 正序; desc: 反序; 這邊指定"name"作為主要排序的欄位資料
         .then(todos => res.render('index', { todos }))
         .catch(error => console.error(error)) // 進行錯誤處理   
 })
@@ -54,7 +58,7 @@ app.post('/todos', (req, res) => {
         .catch(error => console.log(error))
 })
 
-app.get('/todos/:id', (req, res) => {
+app.get('/todos/:id/', (req, res) => {
     const id = req.params.id
     Todo.findById(id) // 找特定id
         .lean()
@@ -70,8 +74,7 @@ app.get('/todos/:id/edit', (req, res) => {
         .catch(error => console.log(error))
 }) 
 
-
-app.post('/todos/:id/edit', (req, res) => { // 接住 edit.hbs所輸入的input post
+app.put('/todos/:id/', (req, res) => { // 接住 edit.hbs所輸入的input post
     const id = req.params.id
     const { name, isDone } = req.body // 採用解構賦值方式
     Todo.findById(id)
@@ -86,7 +89,7 @@ app.post('/todos/:id/edit', (req, res) => { // 接住 edit.hbs所輸入的input 
         .catch(error => console.log(error))
 })
 
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id/', (req, res) => {
     const id = req.params.id
     return Todo.findById(id) // 主要目的是先確保資料庫有這筆資料，才進行刪除
         .then(todo => todo.remove())

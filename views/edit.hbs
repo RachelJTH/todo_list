@@ -1,4 +1,4 @@
-<form action="/todos/{{ todo._id }}/edit" method="post">
+<form action="/todos/{{ todo._id }}?_method=PUT" method="post">
      {{!-- add checkbox for view and editing --}}
     <input type="checkbox" name="isDone" {{#if todo.isDone}} checked {{/if}}> 
     <input type="text" name="name" id="name" value={{todo.name}}>
